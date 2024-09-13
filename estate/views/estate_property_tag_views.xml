@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="estate_tag_listing" model="ir.actions.act_window">
+        <field name="name">Estate Tag Action Window</field>
+        <field name="res_model">estate_property_tags</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Define a new real estate tag
+            </p>
+            <p>
+            Some examples of real estates: "Cozy", "Renovated"
+            </p>
+        </field>
+    </record>
+</odoo>
