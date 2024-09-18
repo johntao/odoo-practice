@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 from dateutil.relativedelta import relativedelta
 
 class EstateProperty(models.Model):
@@ -22,6 +22,10 @@ class EstateProperty(models.Model):
     facades = fields.Integer()
     garage = fields.Boolean()
     garden = fields.Boolean()
+    @api.onchange("garden")
+    def _onchange_garden(self):
+        self.garden_area = 10 if self.garden else None
+        self.garden_orientation = 'north' if self.garden else None
     garden_area = fields.Integer()
     garden_orientation = fields.Selection(string='Type',
             selection=[('north', 'North'), ('south', 'South'), ('east', 'East'), ('west', 'West')],
@@ -39,3 +43,15 @@ class EstateProperty(models.Model):
     seller_user_id = fields.Many2one('res.users', string='Salesperson', default=lambda self: self.env.user)
     tag_ids = fields.Many2many("estate_property_tags", string="Tags")
     offer_ids = fields.One2many("estate_property_offer", "property_id", string="Offers")
+    @api.depends('living_area', 'garden_area')
+    def _compute_total_area(self):
+        for record in self:
+            record.total_area = record.living_area + record.garden_area
+    total_area = fields.Integer(compute='_compute_total_area')
+    
+    @api.depends('offer_ids.price')
+    def _compute_best_price(self):
+        for record in self:
+            # record.best_price = max(record.mapped('offer_ids').mapped('price'))
+            record.best_price = max(sub.price for sub in record.offer_ids)
+    best_price = fields.Float(compute='_compute_best_price')
