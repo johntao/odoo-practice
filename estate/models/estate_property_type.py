@@ -3,7 +3,7 @@
 
 from odoo import fields, models
 
-class EstateProperty(models.Model):
+class EstatePropertyType(models.Model):
     _name = "estate_property_type"
     _description = "estate property type"
     # _order = "sequence"

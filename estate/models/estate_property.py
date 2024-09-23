@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
 
 class EstateProperty(models.Model):
@@ -52,6 +53,16 @@ class EstateProperty(models.Model):
     @api.depends('offer_ids.price')
     def _compute_best_price(self):
         for record in self:
-            # record.best_price = max(record.mapped('offer_ids').mapped('price'))
-            record.best_price = max(sub.price for sub in record.offer_ids)
+            record.best_price = max(record.mapped('offer_ids.price'), default=0)
     best_price = fields.Float(compute='_compute_best_price')
+    
+    def action_sold(self):
+        if self.state == 'canceled':
+            raise UserError('Canceled property cannot be sold.')
+        self.state = 'sold'
+        return True
+    def action_cancel(self):
+        if self.state == 'sold':
+            raise UserError('Sold property cannot be canceled.')
+        self.state = 'canceled'
+        return True
