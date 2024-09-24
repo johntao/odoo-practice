@@ -3,6 +3,7 @@
 
 from odoo import fields, models
 
+
 class EstatePropertyType(models.Model):
     _name = "estate_property_type"
     _description = "estate property type"
@@ -11,5 +12,9 @@ class EstatePropertyType(models.Model):
     name = fields.Char(required=True)
     description = fields.Text()
     _sql_constraints = [
-        ('name_uniq', "unique(name)", "An estate property type with the same name already exists.")
+        (
+            "name_uniq",
+            "unique(name)",
+            "An estate property type with the same name already exists.",
+        )
     ]
