@@ -10,3 +10,6 @@ class EstatePropertyTags(models.Model):
 
     name = fields.Char(required=True)
     description = fields.Text()
+    _sql_constraints = [
+        ('name_uniq', "unique(name)", "An estate property tag with the same name already exists.")
+    ]

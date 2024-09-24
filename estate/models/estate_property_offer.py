@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import UserError
 from odoo import fields, models, api
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_compare
 # from odoo.tools import date_utils
 
 class EstatePropertyOffer(models.Model):
@@ -48,3 +49,19 @@ class EstatePropertyOffer(models.Model):
         prop.buyer_partner_id = None
         self.status = 'refused'
         return True
+    
+    _sql_constraints = [
+        ('check_price', 'CHECK(price > 0)', 'The price of an offer must be positive.'),
+    ]
+    
+    @api.constrains("price", "property_id")
+    def _check_offer_price(self):
+        prop = self.property_id
+        expected_price_min = prop.expected_price * 0.9
+        accepted_price = self.filtered(lambda x: x.status == "accepted").mapped("price")
+        accepted_price_max = max(accepted_price, default=0)
+        if accepted_price_max == 0:
+            return
+        invalid_expected_price = float_compare(accepted_price_max, expected_price_min, None, 2) == -1
+        if invalid_expected_price:
+            raise ValidationError(r'Selling price cannot be lower than 90% of the expected price.')

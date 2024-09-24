@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
-from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_compare
 
 class EstateProperty(models.Model):
     _name = "estate_property"
@@ -66,3 +67,38 @@ class EstateProperty(models.Model):
             raise UserError('Sold property cannot be canceled.')
         self.state = 'canceled'
         return True
+    
+    _sql_constraints = [
+        (
+            "check_expected_price",
+            "CHECK(expected_price > 0)",
+            "The expected_price of an estate property must be positive.",
+        ),
+        (
+            "check_selling_price",
+            "CHECK(selling_price > 0)",
+            "The selling_price of an estate property must be positive.",
+        ),
+    ]
+
+    @api.constrains("expected_price", "offer_ids")
+    def _check_offer_price(self):
+        for item in self:
+            offers = item.offer_ids
+            hasAnyOffer = offers.__len__() > 0
+            if not hasAnyOffer:
+                continue
+            expected_price_min = item.expected_price * 0.9
+            accepted_price = offers.filtered(lambda x: x.status == "accepted").mapped(
+                "price"
+            )
+            accepted_price_max = max(accepted_price, default=0)
+            if accepted_price_max == 0:
+                continue
+            invalid_expected_price = (
+                float_compare(accepted_price_max, expected_price_min, None, 2) == -1
+            )
+            if invalid_expected_price:
+                raise ValidationError(
+                    r"Selling price cannot be lower than 90% of the expected price."
+                )
