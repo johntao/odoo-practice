@@ -13,4 +13,14 @@
             </p>
         </field>
     </record>
+    <record id="estate_tag_tree" model="ir.ui.view">
+        <field name="name">estate_property_tags.tree</field>
+        <field name="model">estate_property_tags</field>
+        <field name="arch" type="xml">
+            <tree string="Test List" editable="bottom">
+                <field name="name"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
 </odoo>

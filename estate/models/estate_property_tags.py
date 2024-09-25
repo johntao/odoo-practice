@@ -7,10 +7,11 @@ from odoo import fields, models
 class EstatePropertyTags(models.Model):
     _name = "estate_property_tags"
     _description = "estate property type"
-    # _order = "sequence"
+    _order = "name"
 
     name = fields.Char(required=True)
     description = fields.Text()
+    color = fields.Integer()
     _sql_constraints = [
         (
             "name_uniq",

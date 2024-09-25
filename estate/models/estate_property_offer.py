@@ -11,7 +11,7 @@ from odoo.tools import float_compare
 class EstatePropertyOffer(models.Model):
     _name = "estate_property_offer"
     _description = "estate property offer"
-    # _order = "sequence"
+    _order = "price desc"
 
     price = fields.Float()
     status = fields.Selection(
@@ -23,6 +23,7 @@ class EstatePropertyOffer(models.Model):
     )
     buyer_partner_id = fields.Many2one("res.partner", "Buyer", required=True)
     property_id = fields.Many2one("estate_property", required=True)
+    property_type_id = fields.Many2one("estate_property_type", related="property_id.property_type_id", store=True)
 
     validity = fields.Integer(default=7)
 
@@ -35,10 +36,12 @@ class EstatePropertyOffer(models.Model):
                 )
 
     def _inverse_deadline(self):
-        for item in self:
-            if item.create_date:
-                item.validity = (
-                    item.date_deadline - fields.Date.to_date(item.create_date)
+        for offer in self:
+            if not offer.date_deadline:
+                continue
+            if offer.create_date:
+                offer.validity = (
+                    offer.date_deadline - fields.Date.to_date(offer.create_date)
                 ).days
 
     date_deadline = fields.Date(
@@ -46,11 +49,12 @@ class EstatePropertyOffer(models.Model):
     )
 
     def action_accept(self):
-        offer_len = self.filtered(lambda q: q.status == "accepted").__len__()
-        if offer_len == 1:
-            raise UserError("Only one offer can be accepted at a time")
+        self.ensure_one()
         prop = self.property_id
+        if prop.state == "accepted":
+            raise UserError("Only one offer can be accepted at a time")
         prop.state = "accepted"
+        self._check_offer_price_rule([self.price])
         prop.selling_price = self.price
         prop.buyer_partner_id = self.buyer_partner_id
         self.status = "accepted"
@@ -58,8 +62,9 @@ class EstatePropertyOffer(models.Model):
 
     def action_refuse(self):
         prop = self.property_id
-        prop.state = "received"
-        prop.selling_price = 0
+        if self.status == "accepted":
+            prop.state = "received"
+        # prop.selling_price = None
         prop.buyer_partner_id = None
         self.status = "refused"
         return True
@@ -70,9 +75,12 @@ class EstatePropertyOffer(models.Model):
 
     @api.constrains("price", "property_id")
     def _check_offer_price(self):
+        accepted_price = self.filtered(lambda x: x.status == "accepted").mapped("price")
+        self._check_offer_price_rule(accepted_price)
+
+    def _check_offer_price_rule(self, accepted_price):
         prop = self.property_id
         expected_price_min = prop.expected_price * 0.9
-        accepted_price = self.filtered(lambda x: x.status == "accepted").mapped("price")
         accepted_price_max = max(accepted_price, default=0)
         if accepted_price_max == 0:
             return
