@@ -13,7 +13,7 @@ class EstatePropertyOffer(models.Model):
     _description = "estate property offer"
     _order = "price desc"
 
-    price = fields.Float()
+    price = fields.Float(required=True)
     status = fields.Selection(
         [
             ("accepted", "Accepted"),
@@ -23,7 +23,9 @@ class EstatePropertyOffer(models.Model):
     )
     buyer_partner_id = fields.Many2one("res.partner", "Buyer", required=True)
     property_id = fields.Many2one("estate_property", required=True)
-    property_type_id = fields.Many2one("estate_property_type", related="property_id.property_type_id", store=True)
+    property_type_id = fields.Many2one(
+        "estate_property_type", related="property_id.property_type_id", store=True
+    )
 
     validity = fields.Integer(default=7)
 
@@ -91,3 +93,24 @@ class EstatePropertyOffer(models.Model):
             raise ValidationError(
                 r"Selling price cannot be lower than 90% of the expected price."
             )
+
+    # @api.model_create_multi
+    # def create(self, vals):
+    #     for vals in vals:
+    #         self.env['gamification.badge'].browse(vals['badge_id']).check_granting()
+    #     return super().create(vals)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        min_existing_price = min(self.mapped("price"))
+        incoming_price = [vals["price"] for vals in vals_list]
+        min_incoming_price = min(incoming_price)
+        if min_incoming_price < min_existing_price:
+            raise UserError(
+                f"An offer cannot be lower than the current lowest price offer: {min_existing_price}"
+            )
+        incoming_prop_ids = [vals["property_id"] for vals in vals_list]
+        props = self.env["estate_property"].browse(incoming_prop_ids)
+        props.ensure_one()
+        props.write({"state": "received"})
+        return super().create(vals_list)

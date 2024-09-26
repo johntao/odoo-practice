@@ -12,4 +12,11 @@
 # from . import digest
 # from . import crm_lead_scoring_frequency
 # from . import utm
-from . import estate_property, estate_property_type, estate_property_offer, estate_property_tags
+
+from . import (
+    estate_property,
+    estate_property_type,
+    estate_property_offer,
+    estate_property_tags,
+    estate_property_seller,
+)

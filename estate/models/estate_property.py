@@ -126,3 +126,13 @@ class EstateProperty(models.Model):
                 raise ValidationError(
                     r"Selling price cannot be lower than 90% of the expected price."
                 )
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_new_or_cancel(self):
+        # if self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1):
+        #     raise UserError('You cannot perform this action on an account that contains journal items.')
+        cnt = self.search_count([("state", "not in", ["new", "canceled"])])
+        if cnt:
+            raise UserError(
+                "You cannot delete a property which is not new or canceled."
+            )
