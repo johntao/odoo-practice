@@ -102,7 +102,9 @@ class EstatePropertyOffer(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        min_existing_price = min(self.mapped("price"))
+        min_existing_price = min(self.mapped("price"), default=0)
+        if not min_existing_price:
+            return super().create(vals_list)
         incoming_price = [vals["price"] for vals in vals_list]
         min_incoming_price = min(incoming_price)
         if min_incoming_price < min_existing_price:
