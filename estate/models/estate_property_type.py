@@ -5,7 +5,7 @@ from odoo import fields, models, api
 
 
 class EstatePropertyType(models.Model):
-    _name = "estate_property_type"
+    _name = "estate.property.type"
     _description = "estate property type"
     _order = "name"
     sequence = fields.Integer(
@@ -20,8 +20,8 @@ class EstatePropertyType(models.Model):
             "An estate property type with the same name already exists.",
         )
     ]
-    offer_ids = fields.One2many("estate_property_offer", "property_type_id")
-    prop_ids = fields.One2many("estate_property", "property_type_id")
+    offer_ids = fields.One2many("estate.property.offer", "property_type_id")
+    prop_ids = fields.One2many("estate.property", "property_type_id")
 
     @api.depends("offer_ids")
     def _compute_offer_count(self):
@@ -35,7 +35,7 @@ class EstatePropertyType(models.Model):
 #     _name = "test_model_line"
 #     _description = "Test Model Line"
 
-#     model_id = fields.Many2one("estate_property")
+#     model_id = fields.Many2one("estate.property")
 #     name = fields.Char()
 #     expected_price = fields.Float()
 #     state = fields.Selection()

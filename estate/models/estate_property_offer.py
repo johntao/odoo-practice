@@ -9,7 +9,7 @@ from odoo.tools import float_compare
 
 
 class EstatePropertyOffer(models.Model):
-    _name = "estate_property_offer"
+    _name = "estate.property.offer"
     _description = "estate property offer"
     _order = "price desc"
 
@@ -22,9 +22,9 @@ class EstatePropertyOffer(models.Model):
         copy=False,
     )
     buyer_partner_id = fields.Many2one("res.partner", "Buyer", required=True)
-    property_id = fields.Many2one("estate_property", required=True)
+    property_id = fields.Many2one("estate.property", required=True)
     property_type_id = fields.Many2one(
-        "estate_property_type", related="property_id.property_type_id", store=True
+        "estate.property.type", related="property_id.property_type_id", store=True
     )
 
     validity = fields.Integer(default=7)
@@ -112,7 +112,7 @@ class EstatePropertyOffer(models.Model):
                 f"An offer cannot be lower than the current lowest price offer: {min_existing_price}"
             )
         incoming_prop_ids = [vals["property_id"] for vals in vals_list]
-        props = self.env["estate_property"].browse(incoming_prop_ids)
+        props = self.env["estate.property"].browse(incoming_prop_ids)
         props.ensure_one()
         props.write({"state": "received"})
         return super().create(vals_list)

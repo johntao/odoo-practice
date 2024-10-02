@@ -6,7 +6,7 @@ from odoo.fields import Command
 
 
 class EstatePropertyAccount(models.Model):
-    _inherit = "estate_property"
+    _inherit = "estate.property"
 
     def action_sold(self):
         self.ensure_one()

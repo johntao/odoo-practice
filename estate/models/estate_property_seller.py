@@ -8,7 +8,7 @@ class EstatePropertySeller(models.Model):
     _inherit = "res.users"
 
     property_ids = fields.One2many(
-        "estate_property",
+        "estate.property",
         "seller_user_id",
         string="Estate Props",
         domain=['|', ("state", "=", "new"), ("state", "=", "received")],

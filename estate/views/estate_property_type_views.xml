@@ -2,7 +2,7 @@
 <odoo>
     <record id="estate_type_listing" model="ir.actions.act_window">
         <field name="name">Estate Type Action Window</field>
-        <field name="res_model">estate_property_type</field>
+        <field name="res_model">estate.property.type</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -15,14 +15,14 @@
     </record>
     <record id="estate_offer_group_by_type" model="ir.actions.act_window">
         <field name="name">Offers group by Property Type</field>
-        <field name="res_model">estate_property_offer</field>
+        <field name="res_model">estate.property.offer</field>
         <field name="view_mode">tree</field>
         <field name="domain">[('property_type_id', '=', active_id)]</field>
         <!-- <field name="context">{'default_event_id': active_id}</field> -->
     </record>
     <record id="estate_type_form" model="ir.ui.view">
         <field name="name">estate_property_type.form</field>
-        <field name="model">estate_property_type</field>
+        <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
             <form string="Property Types">
                 <sheet>
@@ -58,7 +58,7 @@
     </record>
     <record id="estate_type_tree" model="ir.ui.view">
         <field name="name">estate_property_type.tree</field>
-        <field name="model">estate_property_type</field>
+        <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
             <tree string="Test List">
                 <field name="sequence" widget="handle"/>
@@ -70,7 +70,7 @@
 
     <record id="qqq" model="ir.ui.view">
         <field name="name">estate_property_offer.tree</field>
-        <field name="model">estate_property_offer</field>
+        <field name="model">estate.property.offer</field>
         <field name="arch" type="xml">
             <tree decoration-success="status == 'accepted'" decoration-danger="status == 'refused'">
                 <field name="price"/>
