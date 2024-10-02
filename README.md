@@ -1,10 +1,7 @@
-# Odoo tutorials
+# Odoo Practice Repository
 
-This repository hosts the code for the bases and solutions of the
-[official Odoo tutorials](https://www.odoo.com/documentation/17.0/developer/tutorials.html).
-
-It has 3 branches for each Odoo version: one for the bases, one for
-[Discover the JS framework](https://www.odoo.com/documentation/17.0/developer/tutorials/discover_js_framework.html) solutions and one for [Master the Odoo web framework](https://www.odoo.com/documentation/17.0/developer/tutorials/master_odoo_web_framework.html) solutions. For example, `17.0`, `17.0-discover-js-framework-solutions` and `17.0-master-odoo-web-framework-solutions`. 
-The first contains the code of the modules that serve as base for the tutorials,
-and the others contains the code of each chapter with the complete
-solution.
+- This is a direct clone of the [official tutorial repository](https://github.com/odoo/tutorials).
+- It serves as a practice environment for working through all the [official Odoo tutorials](https://www.odoo.com/documentation/17.0/developer/tutorials.html).
+- This repository is based on Odoo version `17.0`.
+- Please refer to the [official setup guide](https://www.odoo.com/documentation/17.0/developer/tutorials/setup_guide.html) for **prerequisites**.
+- The walkthrough covers only the real estate module mentioned in [Server framework 101](https://www.odoo.com/documentation/17.0/developer/tutorials/server_framework_101.html).
