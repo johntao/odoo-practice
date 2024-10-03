@@ -1,15 +1,22 @@
 <templates xml:space="preserve">
    <t t-name="my_module.TodoList">
       <p>Todo List</p>
-      <ul t-foreach="todos" t-as="q" t-key="q.id">
-         <TodoItem todo="q" />
+      <input placeholder="new todo" t-on-keyup="addTodo" t-ref="qqq" />
+      <ul>
+         <TodoItem todo="q" t-foreach="todos" t-as="q" t-key="q.id" toggleTodo.bind="toggleTodo" removeTodo.bind="removeTodo" />
       </ul>
+      <button class="btn btn-primary" t-on-click="increment">Increment (<t t-esc="state.version" />
+)</button>
    </t>
    <t t-name="my_module.TodoItem">
       <li>
-         <t t-esc="props.todo.id"/>.
-         <t t-esc="props.todo.description" />.
-         <t t-esc="props.todo.isCompleted" />
+         <input type="checkbox" t-att-checked="props.todo.isCompleted" t-on-change="onChange" />
+         <span t-att-class="{'text-decoration-line-through text-muted': props.todo.isCompleted}">
+            <t t-esc="props.todo.id"/>.
+            <t t-esc="props.todo.description" />.
+            <t t-esc="props.todo.isCompleted" />
+         </span>
+         <span class="fa fa-remove" t-on-click="onRemove" />
       </li>
    </t>
 </templates>

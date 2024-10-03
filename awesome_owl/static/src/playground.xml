@@ -8,7 +8,9 @@
         <Card title="'my title2'" content="val2"/> -->
         <!-- <Counter onChange.bind="incrementSum" />
         <Counter onChange.bind="incrementSum" /> -->
-        <TodoList />
-        <t t-esc="state.sum" />
+        <Card title="'my title'">
+            <TodoList />
+        </Card>
+        <!-- <t t-esc="state.sum" /> -->
     </t>
 </templates>

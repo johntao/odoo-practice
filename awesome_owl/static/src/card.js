@@ -1,14 +1,17 @@
 /** @odoo-module **/
 
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 export class Card extends Component {
   static template = "my_module.Card";
 
-  // setup() {
-  //   this.state = useState({ value: 0 });
-  // }
+  setup() {
+    this.isOpen = useState({ value: true });
+  }
 
+  toggle() {
+    this.isOpen.value = !this.isOpen.value;
+  }
   // increment() {
   //   this.state.value++;
   // }

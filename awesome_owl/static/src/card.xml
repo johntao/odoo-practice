@@ -4,9 +4,13 @@
       <div class="card-body">
         <h5 class="card-title">
           <t t-esc="props.title"/>
+          <button type="button" class="close" aria-label="Close" t-on-click="toggle">
+            Toggle
+          </button>
         </h5>
-        <p class="card-text">
-          <t t-out="props.content"/>
+        <p class="card-text" t-if="isOpen.value">
+          <!-- <t t-out="props.content"/> -->
+          <t t-slot="default" />
         </p>
       </div>
     </div>
