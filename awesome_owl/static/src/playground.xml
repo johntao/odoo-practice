@@ -6,8 +6,9 @@
         </div>
         <!-- <Card title="'my title'" content="val1"/>
         <Card title="'my title2'" content="val2"/> -->
-        <Counter onChange.bind="incrementSum" />
-        <Counter onChange.bind="incrementSum" />
+        <!-- <Counter onChange.bind="incrementSum" />
+        <Counter onChange.bind="incrementSum" /> -->
+        <TodoList />
         <t t-esc="state.sum" />
     </t>
 </templates>

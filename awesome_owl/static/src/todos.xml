@@ -1,0 +1,15 @@
+<templates xml:space="preserve">
+   <t t-name="my_module.TodoList">
+      <p>Todo List</p>
+      <ul t-foreach="todos" t-as="q" t-key="q.id">
+         <TodoItem todo="q" />
+      </ul>
+   </t>
+   <t t-name="my_module.TodoItem">
+      <li>
+         <t t-esc="props.todo.id"/>.
+         <t t-esc="props.todo.description" />.
+         <t t-esc="props.todo.isCompleted" />
+      </li>
+   </t>
+</templates>
